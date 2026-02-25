@@ -9,7 +9,7 @@ set -e
 # Constructor sets PREFIX to the installation directory
 
 # Find Python version dynamically
-PYTHON_VERSION=$("${PREFIX}/bin/python" -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
+PYTHON_VERSION=$("${PREFIX}/bin/python" -c "import sys; print(str(sys.version_info.major) + '.' + str(sys.version_info.minor))")
 
 MARKER_FILE="${PREFIX}/lib/python${PYTHON_VERSION}/EXTERNALLY-MANAGED"
 
