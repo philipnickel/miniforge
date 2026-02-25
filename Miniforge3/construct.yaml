@@ -5,9 +5,9 @@
 #   - `MAMBA_VERSION` in `scripts/test.sh`
 {% set mamba_version = "2.5.0" %}
 
-name: Miniforge3
+name: Miniforge3-DTU
 version: {{ version }}
-company: conda-forge
+company: DTU-PIS
 
 channels:
   # specifying the channel with the full URL adds two channels
@@ -30,23 +30,64 @@ license_file: {{ os.environ.get("MINIFORGE_LICENSE_OVERRIDE", "../LICENSE") }}
 # During batch installation, conda is never initialized
 initialize_conda: True
 initialize_by_default: False
+post_install: post_install.sh  # [unix]
+post_install: post_install.bat  # [win]
 
 user_requested_specs:
-  - python 3.13.*
+  - python 3.11.*
   - conda >={{ version.split("-")[0] }}
   - mamba >={{ mamba_version }}
   - pip
+  - dtumathtools
+  - pandas
+  - scipy
+  - statsmodels
+  - uncertainties
   # Omit conda-libmamba-solver so that conda is free to remove it later
   - miniforge_console_shortcut 1.*  # [win]
 
 specs:
-  - python 3.13.*
+  - python 3.12.*
   - conda {{ version.split("-")[0] }}
   - mamba {{ mamba_version }}
   - conda-libmamba-solver {{ conda_libmamba_solver_version }}
   - pip
+  - dtumathtools
+  - pandas
+  - scipy
+  - statsmodels
+  - uncertainties
   - miniforge_console_shortcut 1.*  # [win]
 
 virtual_specs:
   - __glibc >=2.17 # [linux]
   - __osx >=10.13 # [osx]
+
+extra_envs:
+  # Base environment for 1st/2nd semester - frozen packages
+  base-semester:
+    specs:
+      - python 3.12.*
+      - dtumathtools
+      - uncertainties
+      - statsmodels
+      - scipy
+    
+  # Math 1 course environment
+  math1:
+    specs:
+      - python 3.12.*
+      - dtumathtools
+  
+  # Statistics course environment
+  statistics:
+    specs:
+      - python 3.12.*
+      - statsmodels
+      - dtumathtools
+  
+  # Physics course environment
+  physics:
+    specs:
+      - python 3.12.*
+      - uncertainties
