@@ -12,12 +12,10 @@ cd "${CONSTRUCT_ROOT}"
 echo "***** Install constructor *****"
 
 MINIFORGE_CHANNEL_NAME="${MINIFORGE_CHANNEL_NAME:-conda-forge}"
-# Use anaconda channel for constructor 3.15.0+ which includes freeze_base support
-CONSTRUCTOR_CHANNEL="${CONSTRUCTOR_CHANNEL:-anaconda}"
 mamba install --yes \
-    --channel "${CONSTRUCTOR_CHANNEL}" --override-channels \
+    --channel "${MINIFORGE_CHANNEL_NAME}" --override-channels \
     jinja2 curl libarchive \
-    "constructor>=3.15.0"
+    "constructor>=3.14.0"
 
 if [[ "$(uname)" == "Darwin" ]]; then
     mamba install --yes \
