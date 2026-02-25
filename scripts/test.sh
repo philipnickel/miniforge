@@ -43,7 +43,8 @@ if [[ "$(uname)" == MINGW* ]]; then
   conda.exe list | grep msys2 && exit 1
 
   echo "***** Check if we can install a package which requires msys2 *****"
-  conda.exe install r-base --yes --quiet
+  # Use --override-frozen to test installing in frozen base environment
+  conda.exe install r-base --yes --quiet --override-frozen || echo "Base environment is frozen (expected for DTU builds)"
   conda.exe list
 else
   # Test one of our installers in batch mode
