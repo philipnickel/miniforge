@@ -31,6 +31,8 @@ license_file: {{ os.environ.get("MINIFORGE_LICENSE_OVERRIDE", "../LICENSE") }}
 # During batch installation, conda is never initialized
 initialize_conda: True
 initialize_by_default: True
+post_install: post_install.sh  # [unix]
+post_install: post_install.bat  # [win]
 
 user_requested_specs:
   - python 3.12.*
