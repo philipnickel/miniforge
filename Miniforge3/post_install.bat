@@ -19,7 +19,7 @@ echo.
 echo To install additional packages, create a new environment:
 echo   conda create -n myproject python=3.12
 echo   conda activate myproject
-echo   conda install ^<packages^>   # or: pip install ^<packages^>
+echo   conda install ^<packages^>   
 echo.
 echo This protection applies to both conda/mamba AND pip/uv/poetry.
 echo.

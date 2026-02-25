@@ -22,7 +22,7 @@ Error=This DTU Python base environment is frozen and cannot be modified.
 To install additional packages, create a new environment:
   conda create -n myproject python=3.12
   conda activate myproject
-  conda install <packages>   # or: pip install <packages>
+  conda install <packages>   
 
 This protection applies to both conda/mamba AND pip/uv/poetry.
 
