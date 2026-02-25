@@ -1,0 +1,132 @@
+name: Build and release dev miniforge
+on:
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Dev-Miniforge3-${{ matrix.OS_NAME }}-${{ matrix.ARCH }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            ARCH: x86_64
+            TARGET_PLATFORM: win-64
+            OS_NAME: "Windows"
+
+          - os: macos-latest
+            ARCH: arm64
+            TARGET_PLATFORM: osx-arm64
+            OS_NAME: "MacOSX"
+
+          - os: macos-latest
+            ARCH: x86_64
+            TARGET_PLATFORM: osx-64
+            OS_NAME: "MacOSX"
+
+          - os: ubuntu-latest
+            ARCH: aarch64
+            TARGET_PLATFORM: linux-aarch64
+            DOCKER_ARCH: arm64/v8
+            DOCKERIMAGE: condaforge/linux-anvil-aarch64
+            OS_NAME: "Linux"
+            # Reduce the test matrix because the builds timeouts on emulated architectures
+            # The time consuming operation is an attempt a full solve of conda/mamba/boa
+            # for as a compatibility
+            # xref https://github.com/conda-forge/miniforge/pull/361
+            TEST_IMAGE_NAMES: "ubuntu:24.04"
+
+          - os: ubuntu-latest
+            ARCH: x86_64
+            TARGET_PLATFORM: linux-64
+            DOCKER_ARCH: amd64
+            DOCKERIMAGE: condaforge/linux-anvil-cos7-x86_64
+            OS_NAME: "Linux"
+
+          - os: ubuntu-latest
+            ARCH: ppc64le
+            TARGET_PLATFORM: linux-ppc64le
+            DOCKER_ARCH: ppc64le
+            DOCKERIMAGE: condaforge/linux-anvil-ppc64le
+            OS_NAME: "Linux"
+            # Reduce the test matrix because the builds timeouts on emulated architectures
+            # The time consuming operation is an attempt a full solve of conda/mamba/boa
+            # for as a compatibility
+            # xref https://github.com/conda-forge/miniforge/pull/361
+            TEST_IMAGE_NAMES: "ubuntu:24.04"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: conda-incubator/setup-miniconda@fc2d68f6413eb2d87b895e92f8584b5b94a10167 # v3.3.0
+        with:
+          miniforge-version: "latest"
+          use-mamba: true
+        if: ${{ ! contains(matrix.OS_NAME, 'Linux') }}
+
+      - name: Build and test miniforge
+        env:
+          ARCH: ${{ matrix.ARCH }}
+          OS_NAME: ${{ matrix.OS_NAME }}
+          DOCKERIMAGE: ${{ matrix.DOCKERIMAGE }}
+          DOCKER_ARCH: ${{ matrix.DOCKER_ARCH }}
+          TARGET_PLATFORM: ${{ matrix.TARGET_PLATFORM }}
+          TEST_IMAGE_NAMES: ${{ matrix.TEST_IMAGE_NAMES }}
+          MINIFORGE_VERSION: dev-${{ github.sha }}
+        run: |
+          if [[ "$OS_NAME" == "Linux" ]]; then
+            export EXT=sh
+            bash build_miniforge.sh;
+          fi
+          if [[ "$OS_NAME" == "MacOSX" ]]; then
+            export EXT=sh
+            bash build_miniforge_osx.sh;
+          fi
+          if [[ "$OS_NAME" == "Windows" ]]; then
+            export EXT=exe
+            echo "WINDIR:$WINDIR"
+            source "${CONDA}"/Scripts/activate;
+            source build_miniforge_win.sh;
+          fi
+          # Copy for latest dev release
+          cp build/Miniforge3-*-$OS_NAME-$ARCH.$EXT build/Miniforge3-dev-$OS_NAME-$ARCH.$EXT
+          if [[ "$OS_NAME" == "MacOSX" ]]; then
+            cp build/Miniforge3-*-$OS_NAME-$ARCH.$EXT build/Miniforge3-dev-Darwin-$ARCH.$EXT
+          fi
+          ls -alh build
+        shell: bash
+
+      - name: Upload miniforge to Github artifact
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          path: build/Miniforge3-*-${{ matrix.OS_NAME }}-${{ matrix.ARCH }}*
+          name: Dev-Miniforge3-${{ matrix.OS_NAME }}-${{ matrix.ARCH }}
+
+      - name: Upload miniforge to dev release
+        uses: svenstaro/upload-release-action@6b7fa9f267e90b50a19fef07b3596790bb941741 # v2.11.3
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: build/M*forge*
+          tag: dev
+          overwrite: true
+          file_glob: true
+          prerelease: true
+          release_name: "Development Release (Rolling)"
+          body: |
+            **Automated development release from the dev branch**
+            
+            This is a rolling development release that gets updated automatically when code is merged to the `dev` branch.
+            
+            **⚠️ Warning:** These are unstable development builds. Use at your own risk!
+            
+            - Commit: ${{ github.sha }}
+            - Build date: ${{ github.event.head_commit.timestamp }}
+            - Triggered by: @${{ github.actor }}
+            
+            For stable releases, see: https://github.com/${{ github.repository }}/releases
