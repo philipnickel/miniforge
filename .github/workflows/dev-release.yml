@@ -88,9 +88,9 @@ jobs:
             source build_miniforge_win.sh;
           fi
           # Copy for latest dev release
-          cp build/Miniforge3-*-$OS_NAME-$ARCH.$EXT build/Miniforge3-dev-$OS_NAME-$ARCH.$EXT
+          cp build/Miniforge3-dev-*-$OS_NAME-$ARCH.$EXT build/Miniforge3-dev-$OS_NAME-$ARCH.$EXT
           if [[ "$OS_NAME" == "MacOSX" ]]; then
-            cp build/Miniforge3-*-$OS_NAME-$ARCH.$EXT build/Miniforge3-dev-Darwin-$ARCH.$EXT
+            cp build/Miniforge3-dev-*-$OS_NAME-$ARCH.$EXT build/Miniforge3-dev-Darwin-$ARCH.$EXT
           fi
           ls -alh build
         shell: bash
