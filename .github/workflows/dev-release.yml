@@ -85,10 +85,11 @@ jobs:
             source "${CONDA}"/Scripts/activate;
             source build_miniforge_win.sh;
           fi
-          # Rename to stable dev name (overwritten each push)
-          mv build/Miniforge3-dev-*-$OS_NAME-$ARCH.$EXT build/Miniforge3-dev-$OS_NAME-$ARCH.$EXT
-          # Remove leftover files (versionless copy from build.sh, sha256 files)
-          rm -f build/Miniforge3-$OS_NAME-$ARCH.$EXT build/*.sha256
+          # Copy for latest release
+          cp build/Miniforge3-*-$OS_NAME-$ARCH.$EXT build/Miniforge3-$OS_NAME-$ARCH.$EXT
+          if [[ "$OS_NAME" == "MacOSX" ]]; then
+            cp build/Miniforge3-*-$OS_NAME-$ARCH.$EXT build/Miniforge3-Darwin-$ARCH.$EXT
+          fi
           ls -alh build
         shell: bash
 
@@ -96,16 +97,17 @@ jobs:
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
-          path: build/Miniforge3-dev-${{ matrix.OS_NAME }}-${{ matrix.ARCH }}.${{ matrix.OS_NAME == 'Windows' && 'exe' || 'sh' }}
-          name: Dev-Miniforge3-${{ matrix.OS_NAME }}-${{ matrix.ARCH }}
+          path: build/Miniforge3-${{ matrix.OS_NAME }}-${{ matrix.ARCH }}*
+          name: Miniforge3-${{ matrix.OS_NAME }}-${{ matrix.ARCH }}
 
       - name: Upload miniforge to dev release
         uses: svenstaro/upload-release-action@6b7fa9f267e90b50a19fef07b3596790bb941741 # v2.11.3
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: build/Miniforge3-dev-${{ matrix.OS_NAME }}-${{ matrix.ARCH }}.${{ matrix.OS_NAME == 'Windows' && 'exe' || 'sh' }}
+          file: build/M*forge*
           tag: dev
           overwrite: true
+          file_glob: true
           prerelease: true
           release_name: "Development Release (Rolling)"
           body: |
