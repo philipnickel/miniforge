@@ -6,7 +6,7 @@
 #   - `MAMBA_VERSION` in `scripts/test.sh`
 {% set mamba_version = "2.5.0" %}
 
-name: Miniforge3-DTU
+name: Miniforge3
 version: {{ version }}
 company: DTU-PIS
 
