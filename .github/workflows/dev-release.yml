@@ -69,7 +69,7 @@ jobs:
           DOCKER_ARCH: ${{ matrix.DOCKER_ARCH }}
           TARGET_PLATFORM: ${{ matrix.TARGET_PLATFORM }}
           TEST_IMAGE_NAMES: ${{ matrix.TEST_IMAGE_NAMES }}
-          MINIFORGE_VERSION: dev-${{ github.sha }}
+          MINIFORGE_VERSION: dev
         run: |
           if [[ "$OS_NAME" == "Linux" ]]; then
             export EXT=sh
