@@ -71,13 +71,15 @@ virtual_specs:
 freeze_base:
   conda:
     message: |
-      This base environment is frozen and cannot be modified.
-      WARNING: Bypassing this protection can break your installation.
+      This base environment is frozen and should not be modified.
+      Bypassing this protection can break your installation. Do so at your own risk.
 
       Instead, create a new environment:
         conda create -n myproject python=3.12
         conda activate myproject
         conda install <packages>
+
+      Only use pip if the package is not available on conda-forge:
         pip install <packages>
 
 # Pre-configured course environments
