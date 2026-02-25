@@ -113,15 +113,8 @@ jobs:
           body: |
             Automated development release from the dev branch.
             
-            WARNING: These are unstable development builds. Use at your own risk.
-            
             Environments:
             - Base (frozen): Python 3.12, conda, mamba, pip, uv, dtumathtools, pandas, scipy, statsmodels, uncertainties
             - math1: Python 3.12, dtumathtools
             - statistics: Python 3.12, statsmodels, dtumathtools, scipy
             - physics: Python 3.12, uncertainties, scipy
-            
-            Build info:
-            - Commit: ${{ github.sha }}
-            - Date: ${{ github.event.head_commit.timestamp }}
-            - Triggered by: @${{ github.actor }}
