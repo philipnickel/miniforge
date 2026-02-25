@@ -127,3 +127,4 @@ jobs:
             - Triggered by: @${{ github.actor }}
             
             For stable releases, see: https://github.com/${{ github.repository }}/releases
+        if: github.event_name == 'push'
