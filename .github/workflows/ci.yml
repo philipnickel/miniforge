@@ -43,14 +43,6 @@ jobs:
             DOCKERIMAGE: condaforge/linux-anvil-cos7-x86_64
             OS_NAME: "Linux"
 
-          - os: ubuntu-latest
-            ARCH: ppc64le
-            TARGET_PLATFORM: linux-ppc64le
-            DOCKER_ARCH: ppc64le
-            DOCKERIMAGE: condaforge/linux-anvil-ppc64le
-            OS_NAME: "Linux"
-            TEST_IMAGE_NAMES: "ubuntu:24.04"
-
     steps:
       - name: Checkout code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
