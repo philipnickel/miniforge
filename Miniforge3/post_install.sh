@@ -17,8 +17,9 @@ MARKER_FILE="${PREFIX}/lib/python${PYTHON_VERSION}/EXTERNALLY-MANAGED"
 cat > "${MARKER_FILE}" << 'EOF'
 [externally-managed]
 Error=This base environment is frozen and cannot be modified.
+  WARNING: Bypassing this protection can break your installation.
 
-  To install additional packages, create a new environment:
+  Instead, create a new environment:
     conda create -n myproject python=3.12
     conda activate myproject
     conda install <packages>

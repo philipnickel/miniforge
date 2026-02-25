@@ -10,8 +10,9 @@ set MARKER_FILE=%PREFIX%\Lib\EXTERNALLY-MANAGED
 (
 echo [externally-managed]
 echo Error=This base environment is frozen and cannot be modified.
+echo   WARNING: Bypassing this protection can break your installation.
 echo.
-echo   To install additional packages, create a new environment:
+echo   Instead, create a new environment:
 echo     conda create -n myproject python=3.12
 echo     conda activate myproject
 echo     conda install ^<packages^>
