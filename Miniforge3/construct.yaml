@@ -79,3 +79,26 @@ freeze_base:
         conda install <your-packages>
       
       This ensures your base installation remains stable and functional.
+
+# Pre-configured course environments
+extra_envs:
+  # Math 1 course environment
+  math1:
+    specs:
+      - python 3.12.*
+      - dtumathtools
+  
+  # Statistics course environment
+  statistics:
+    specs:
+      - python 3.12.*
+      - statsmodels
+      - dtumathtools
+      - scipy
+  
+  # Physics course environment
+  physics:
+    specs:
+      - python 3.12.*
+      - uncertainties
+      - scipy
