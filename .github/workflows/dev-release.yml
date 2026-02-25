@@ -13,45 +13,43 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Temporarily only building macOS ARM64 for faster debugging
+          - os: windows-latest
+            ARCH: x86_64
+            TARGET_PLATFORM: win-64
+            OS_NAME: "Windows"
+
           - os: macos-latest
             ARCH: arm64
             TARGET_PLATFORM: osx-arm64
             OS_NAME: "MacOSX"
 
-          # Disabled for now - uncomment to build all platforms
-          # - os: windows-latest
-          #   ARCH: x86_64
-          #   TARGET_PLATFORM: win-64
-          #   OS_NAME: "Windows"
-          #
-          # - os: macos-latest
-          #   ARCH: x86_64
-          #   TARGET_PLATFORM: osx-64
-          #   OS_NAME: "MacOSX"
-          #
-          # - os: ubuntu-latest
-          #   ARCH: aarch64
-          #   TARGET_PLATFORM: linux-aarch64
-          #   DOCKER_ARCH: arm64/v8
-          #   DOCKERIMAGE: condaforge/linux-anvil-aarch64
-          #   OS_NAME: "Linux"
-          #   TEST_IMAGE_NAMES: "ubuntu:24.04"
-          #
-          # - os: ubuntu-latest
-          #   ARCH: x86_64
-          #   TARGET_PLATFORM: linux-64
-          #   DOCKER_ARCH: amd64
-          #   DOCKERIMAGE: condaforge/linux-anvil-cos7-x86_64
-          #   OS_NAME: "Linux"
-          #
-          # - os: ubuntu-latest
-          #   ARCH: ppc64le
-          #   TARGET_PLATFORM: linux-ppc64le
-          #   DOCKER_ARCH: ppc64le
-          #   DOCKERIMAGE: condaforge/linux-anvil-ppc64le
-          #   OS_NAME: "Linux"
-          #   TEST_IMAGE_NAMES: "ubuntu:24.04"
+          - os: macos-latest
+            ARCH: x86_64
+            TARGET_PLATFORM: osx-64
+            OS_NAME: "MacOSX"
+
+          - os: ubuntu-latest
+            ARCH: aarch64
+            TARGET_PLATFORM: linux-aarch64
+            DOCKER_ARCH: arm64/v8
+            DOCKERIMAGE: condaforge/linux-anvil-aarch64
+            OS_NAME: "Linux"
+            TEST_IMAGE_NAMES: "ubuntu:24.04"
+
+          - os: ubuntu-latest
+            ARCH: x86_64
+            TARGET_PLATFORM: linux-64
+            DOCKER_ARCH: amd64
+            DOCKERIMAGE: condaforge/linux-anvil-cos7-x86_64
+            OS_NAME: "Linux"
+
+          - os: ubuntu-latest
+            ARCH: ppc64le
+            TARGET_PLATFORM: linux-ppc64le
+            DOCKER_ARCH: ppc64le
+            DOCKERIMAGE: condaforge/linux-anvil-ppc64le
+            OS_NAME: "Linux"
+            TEST_IMAGE_NAMES: "ubuntu:24.04"
 
     steps:
       - name: Checkout code
@@ -113,14 +111,57 @@ jobs:
           prerelease: true
           release_name: "Development Release (Rolling)"
           body: |
+            # 🎓 DTU Miniforge Development Release
+            
             **Automated development release from the dev branch**
             
             This is a rolling development release that gets updated automatically when code is merged to the `dev` branch.
             
             **⚠️ Warning:** These are unstable development builds. Use at your own risk!
             
-            - Commit: ${{ github.sha }}
-            - Build date: ${{ github.event.head_commit.timestamp }}
-            - Triggered by: @${{ github.actor }}
+            ## 🚀 What's Included
             
-            For stable releases, see: https://github.com/${{ github.repository }}/releases
+            ### 📦 4 Pre-Configured Environments
+            
+            1. **Base Environment** (Frozen & Protected)
+               - Python 3.12, conda, mamba, pip, uv
+               - dtumathtools, pandas, scipy, statsmodels, uncertainties
+               - 🔒 Protected by CEP-22 + PEP 668 (cannot be modified)
+            
+            2. **math1** - Math 1 Course
+               - Python 3.12 + dtumathtools
+            
+            3. **statistics** - Statistics Course  
+               - Python 3.12 + statsmodels, dtumathtools, scipy
+            
+            4. **physics** - Physics Course
+               - Python 3.12 + uncertainties, scipy
+            
+            ### 🛡️ Complete Protection
+            - ✅ Blocks `conda install` in base (CEP-22)
+            - ✅ Blocks `mamba install` in base (CEP-22)
+            - ✅ Blocks `pip install` in base (PEP 668)
+            - ✅ Blocks `uv pip install` in base (PEP 668)
+            
+            ### 💡 Usage
+            ```bash
+            # List environments
+            conda env list
+            
+            # Use course environment
+            conda activate math1
+            
+            # Create custom environment
+            conda create -n myproject python=3.12
+            ```
+            
+            ## 📋 Build Info
+            - **Commit:** ${{ github.sha }}
+            - **Build date:** ${{ github.event.head_commit.timestamp }}
+            - **Triggered by:** @${{ github.actor }}
+            - **Constructor:** 3.15.0 (anaconda channel)
+            
+            ## 🔗 Links
+            - [Stable releases](https://github.com/${{ github.repository }}/releases)
+            - [CEP-22 Spec](https://conda.org/learn/ceps/cep-0022)
+            - [PEP 668 Spec](https://peps.python.org/pep-0668/)
