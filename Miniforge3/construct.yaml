@@ -1,4 +1,5 @@
 {% set version = os.environ.get("MINIFORGE_VERSION", "26.1.0-0") %}
+{% set conda_version = "26.1.0" if version.startswith("dev-") else version.split("-")[0] %}
 {% set conda_libmamba_solver_version = "25.11.0" %}
 # This file is parsed by the scripts to define
 #   - `MICROMAMBA_VERSION` in `scripts/build.sh`
@@ -7,7 +8,7 @@
 
 name: Miniforge3
 version: {{ version }}
-company: conda-forge
+company: DTU-PIS
 
 channels:
   # specifying the channel with the full URL adds two channels
@@ -29,22 +30,34 @@ license_file: {{ os.environ.get("MINIFORGE_LICENSE_OVERRIDE", "../LICENSE") }}
 # During the interactive installation, these variables are checked.
 # During batch installation, conda is never initialized
 initialize_conda: True
-initialize_by_default: False
+initialize_by_default: True
 
 user_requested_specs:
-  - python 3.13.*
-  - conda >={{ version.split("-")[0] }}
+  - python 3.12.*
+  - conda >={{ conda_version }}
   - mamba >={{ mamba_version }}
   - pip
+  - uv
+  - dtumathtools
+  - pandas
+  - scipy
+  - statsmodels
+  - uncertainties
   # Omit conda-libmamba-solver so that conda is free to remove it later
   - miniforge_console_shortcut 1.*  # [win]
 
 specs:
-  - python 3.13.*
-  - conda {{ version.split("-")[0] }}
+  - python 3.12.*
+  - conda {{ conda_version }}
   - mamba {{ mamba_version }}
   - conda-libmamba-solver {{ conda_libmamba_solver_version }}
   - pip
+  - uv
+  - dtumathtools
+  - pandas
+  - scipy
+  - statsmodels
+  - uncertainties
   - miniforge_console_shortcut 1.*  # [win]
 
 virtual_specs:
