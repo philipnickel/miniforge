@@ -76,7 +76,8 @@ freeze_base:
       To install additional packages, create a new environment:
         conda create -n myproject python=3.12
         conda activate myproject
-        conda install <your-packages>
+        conda install <packages>
+        pip install <packages>
 
 # Pre-configured course environments
 extra_envs:

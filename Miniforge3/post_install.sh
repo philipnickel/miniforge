@@ -18,11 +18,11 @@ cat > "${MARKER_FILE}" << 'EOF'
 [externally-managed]
 Error=This base environment is frozen and cannot be modified.
 
-To install additional packages, create a new environment:
-  conda create -n myproject python=3.12
-  conda activate myproject
-  conda install <packages>
-  pip install <packages>
+  To install additional packages, create a new environment:
+    conda create -n myproject python=3.12
+    conda activate myproject
+    conda install <packages>
+    pip install <packages>
 EOF
 
 chmod 644 "${MARKER_FILE}"
