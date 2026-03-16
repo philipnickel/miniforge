@@ -39,7 +39,6 @@ user_requested_specs:
   - conda >={{ conda_version }}
   - mamba >={{ mamba_version }}
   - pip
-  - uv
   - dtumathtools
   - pandas
   - scipy
@@ -54,7 +53,6 @@ specs:
   - mamba {{ mamba_version }}
   - conda-libmamba-solver {{ conda_libmamba_solver_version }}
   - pip
-  - uv
   - dtumathtools
   - pandas
   - scipy
